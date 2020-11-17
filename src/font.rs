@@ -4,7 +4,7 @@ use std::ptr::NonNull;
 
 use std::os::raw::c_void;
 
-use crate::common::{HarfbuzzObject, Owned, Shared};
+use crate::common::{Direction, HarfbuzzObject, Owned, Shared, Tag};
 use crate::face::Face;
 pub use crate::font_funcs::FontFuncs;
 use crate::font_funcs::FontFuncsImpl;
@@ -430,6 +430,35 @@ impl<'a> Font<'a> {
             );
             if result == 1 {
                 Some(glyph)
+            } else {
+                None
+            }
+        }
+    }
+
+    pub fn get_baseline(
+        &self,
+        baseline_tag: Tag,
+        direction: Direction,
+        script_tag: Tag,
+        language_tag: Tag,
+    ) -> Option<Position> {
+        unsafe {
+            let mut baseline_pos = 0;
+            let result = hb::hb_ot_layout_get_baseline(
+                self.as_raw(),
+                baseline_tag.0,
+                direction.to_raw(),
+                script_tag.0,
+                language_tag.0,
+                &mut baseline_pos,
+            );
+            println!(
+                "result= {:?}, baseline_pos= {:?}, baseline_tag= {:?}",
+                result, baseline_pos, baseline_tag.0
+            );
+            if result == 1 {
+                Some(baseline_pos)
             } else {
                 None
             }

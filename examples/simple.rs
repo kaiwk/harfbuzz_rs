@@ -1,4 +1,4 @@
-use harfbuzz_rs::{shape, Face, Font, UnicodeBuffer};
+use harfbuzz_rs::{hb, shape, Direction, Face, Font, Tag, UnicodeBuffer};
 
 // Execute this file from the root directory of this repository.
 //
@@ -17,7 +17,11 @@ use harfbuzz_rs::{shape, Face, Font, UnicodeBuffer};
 // gid1146=11@ 248,0+0
 fn main() {
     let index = 0;
-    let path = "testfiles/SourceSansVariable-Roman.ttf";
+    // let path = "testfiles/SourceSansVariable-Roman.ttf";
+    let path = "/Users/kai/Library/Fonts/KaiTi.ttf";
+    // let path = "/System/Library/Fonts/SFNSTextCondensed-Regular.otf";
+    // let path = "/Users/kai/Downloads/base.ttf";
+    // let path = "/System/Library/Fonts/STHeiti Light.ttc";
     let face = Face::from_file(path, index).expect("Error reading font file.");
     let font = Font::new(face);
 
@@ -43,4 +47,14 @@ fn main() {
             gid, cluster, x_advance, x_offset, y_offset
         );
     }
+
+    println!(
+        "alphabetic baseline= {:?}",
+        font.get_baseline(
+            Tag::new('r', 'o', 'm', 'n'),
+            Direction::Ltr,
+            Tag::new('l', 'a', 't', 'n'),
+            Tag::new('E', 'N', 'G', ' ')
+        )
+    );
 }
